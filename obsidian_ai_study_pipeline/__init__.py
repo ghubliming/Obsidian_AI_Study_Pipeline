@@ -8,6 +8,11 @@ This package provides functionality for parsing vault content, semantic search, 
 __version__ = "0.1.0"
 __author__ = "Obsidian AI Study Pipeline Contributors"
 
-from .pipeline import ObsidianStudyPipeline
-
-__all__ = ["ObsidianStudyPipeline"]
+# Make imports optional to allow testing without dependencies
+try:
+    from .pipeline import ObsidianStudyPipeline
+    __all__ = ["ObsidianStudyPipeline"]
+except ImportError as e:
+    import warnings
+    warnings.warn(f"Some dependencies not available: {e}. Install with: pip install -r requirements.txt")
+    __all__ = []

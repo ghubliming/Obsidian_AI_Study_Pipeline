@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 @dataclass
 class VaultConfig:
     """Configuration for vault parsing."""
-    vault_path: str
+    vault_path: str = ""
     ignore_patterns: list = field(default_factory=lambda: ['.obsidian', '__pycache__', '.git'])
     include_attachments: bool = True
 

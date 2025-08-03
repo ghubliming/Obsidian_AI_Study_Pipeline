@@ -9,7 +9,16 @@ from the command line without installing the package.
 import sys
 import argparse
 import logging
+import os
 from pathlib import Path
+
+# Load environment variables from .env file
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    # dotenv not available, continue without it
+    pass
 
 # Add the current directory to Python path for imports
 sys.path.insert(0, str(Path(__file__).parent))
@@ -36,6 +45,10 @@ Examples:
   python run_pipeline.py /path/to/vault --questions 30 --model llama3.2:1b
   python run_pipeline.py vault_path --config config.yaml --output my_output
   python run_pipeline.py vault_path --topic "machine learning" --questions 15
+  
+Free Online Models (with .env file):
+  python run_pipeline.py vault_path --model-type openrouter --model "microsoft/phi-3-mini-128k-instruct:free"
+  python run_pipeline.py vault_path --model-type gemini --model "gemini-1.5-flash"
         """
     )
     
@@ -59,8 +72,12 @@ Examples:
                        help='Model name for question generation (default: llama3.2:1b)')
     
     parser.add_argument('--model-type', default='ollama',
-                       choices=['ollama', 'openai', 'huggingface'],
+                       choices=['ollama', 'openai', 'openrouter', 'gemini', 'huggingface'],
                        help='Type of model to use (default: ollama)')
+    
+    # API configuration (will check environment variables)
+    parser.add_argument('--api-key',
+                       help='API key for online models (optional - will check environment variables: OPENROUTER_API_KEY, GOOGLE_API_KEY, OPENAI_API_KEY)')
     
     # Filtering options
     parser.add_argument('--topic',
@@ -131,6 +148,8 @@ Examples:
         pipeline.config.generation.max_questions = args.questions
         pipeline.config.generation.model_name = args.model
         pipeline.config.generation.model_type = args.model_type
+        if args.api_key:
+            pipeline.config.generation.api_key = args.api_key
         pipeline.config.generation.quiz_types = args.quiz_types
         pipeline.config.output.export_formats = args.formats
         pipeline.config.preprocessing.chunk_size = args.chunk_size
@@ -228,6 +247,10 @@ Examples:
         print(f"\n❌ Pipeline failed: {e}")
         print("\n💡 Tips:")
         print("   • Make sure Ollama is running if using local models")
+        print("   • For online models, set environment variables in .env file:")
+        print("     - OPENROUTER_API_KEY for Openrouter models")
+        print("     - GOOGLE_API_KEY for Google Gemini models")
+        print("     - OPENAI_API_KEY for OpenAI models")
         print("   • Check that your vault path is correct")
         print("   • Try running with --verbose for more details")
         print("   • Use --stats-only to test vault parsing")

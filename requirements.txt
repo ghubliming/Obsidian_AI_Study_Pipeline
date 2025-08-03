@@ -3,6 +3,7 @@ numpy>=1.21.0
 pandas>=1.3.0
 pyyaml>=6.0
 click>=8.0.0
+python-dotenv>=1.0.0
 
 # Markdown and text processing
 markdown>=3.4.0
@@ -17,6 +18,10 @@ faiss-cpu>=1.7.0
 
 # Optional: For local LLM inference
 ollama>=0.1.0
+
+# Optional: For online LLM APIs
+openai>=1.0.0
+google-generativeai>=0.3.0
 
 # Development and testing
 pytest>=7.0.0

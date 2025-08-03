@@ -3,12 +3,21 @@ Quiz generation module using AI models to create various types of quiz questions
 """
 
 import json
+import os
 import re
 import logging
 from typing import List, Dict, Optional, Any, Tuple
 from dataclasses import dataclass, field
 from enum import Enum
 import random
+
+# Load environment variables from .env file
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    # dotenv not available, continue without it
+    pass
 
 from ..preprocessing import ContentChunk
 
@@ -50,20 +59,75 @@ class QuizGenerator:
         Initialize quiz generator.
         
         Args:
-            model_type: Type of model to use ('ollama', 'openai', 'huggingface')
+            model_type: Type of model to use ('ollama', 'openai', 'openrouter', 'gemini', 'huggingface')
             model_name: Name of the specific model
-            api_key: API key if required
-            base_url: Base URL for API if required
+            api_key: API key if required (will check environment variables if not provided)
+            base_url: Base URL for API if required (will use defaults for known services)
         """
         self.model_type = model_type
         self.model_name = model_name
-        self.api_key = api_key
-        self.base_url = base_url
+        
+        # Get API key from environment variables if not provided
+        self.api_key = self._get_api_key(model_type, api_key)
+        
+        # Set base URL with defaults for known services
+        self.base_url = self._get_base_url(model_type, base_url)
         
         # Initialize model client
         self.client = self._initialize_client()
         
         logger.info(f"Initialized QuizGenerator with {model_type}:{model_name}")
+        if self.api_key:
+            logger.info("API key loaded successfully")
+        elif model_type in ["openrouter", "gemini", "openai"]:
+            logger.warning(f"No API key found for {model_type}. Set environment variable or pass api_key parameter.")
+    
+    def _get_api_key(self, model_type: str, provided_key: Optional[str]) -> Optional[str]:
+        """Get API key from provided parameter or environment variables."""
+        if provided_key:
+            return provided_key
+        
+        # Map model types to environment variable names
+        env_var_map = {
+            "openrouter": "OPENROUTER_API_KEY",
+            "gemini": "GOOGLE_API_KEY",
+            "openai": "OPENAI_API_KEY"
+        }
+        
+        env_var = env_var_map.get(model_type)
+        if env_var:
+            api_key = os.getenv(env_var)
+            if api_key:
+                logger.debug(f"Loaded API key from environment variable: {env_var}")
+                return api_key
+        
+        return None
+    
+    def _get_base_url(self, model_type: str, provided_url: Optional[str]) -> Optional[str]:
+        """Get base URL from provided parameter or use defaults."""
+        if provided_url:
+            return provided_url
+        
+        # Check environment variables for custom base URLs
+        env_var_map = {
+            "openrouter": "OPENROUTER_BASE_URL", 
+            "openai": "OPENAI_BASE_URL"
+        }
+        
+        env_var = env_var_map.get(model_type)
+        if env_var:
+            base_url = os.getenv(env_var)
+            if base_url:
+                logger.debug(f"Loaded base URL from environment variable: {env_var}")
+                return base_url
+        
+        # Default base URLs for known services
+        defaults = {
+            "openrouter": "https://openrouter.ai/api/v1",
+            "openai": "https://api.openai.com/v1"
+        }
+        
+        return defaults.get(model_type)
     
     def _initialize_client(self):
         """Initialize the appropriate model client."""
@@ -81,6 +145,28 @@ class QuizGenerator:
                 return client
             except ImportError:
                 logger.error("OpenAI not installed. Install with: pip install openai")
+                return None
+        elif self.model_type == "openrouter":
+            try:
+                import openai
+                # Openrouter uses OpenAI-compatible API
+                base_url = self.base_url or "https://openrouter.ai/api/v1"
+                client = openai.OpenAI(
+                    api_key=self.api_key,
+                    base_url=base_url
+                )
+                return client
+            except ImportError:
+                logger.error("OpenAI client not installed. Install with: pip install openai")
+                return None
+        elif self.model_type == "gemini":
+            try:
+                import google.generativeai as genai
+                if self.api_key:
+                    genai.configure(api_key=self.api_key)
+                return genai
+            except ImportError:
+                logger.error("Google Generative AI not installed. Install with: pip install google-generativeai")
                 return None
         else:
             logger.warning(f"Unsupported model type: {self.model_type}")
@@ -163,13 +249,17 @@ class QuizGenerator:
                     {"role": "user", "content": prompt}
                 ])
                 response_text = response['message']['content']
-            elif self.model_type == "openai":
+            elif self.model_type in ["openai", "openrouter"]:
                 response = self.client.chat.completions.create(
                     model=self.model_name,
                     messages=[{"role": "user", "content": prompt}],
                     temperature=0.7
                 )
                 response_text = response.choices[0].message.content
+            elif self.model_type == "gemini":
+                model = self.client.GenerativeModel(self.model_name)
+                response = model.generate_content(prompt)
+                response_text = response.text
             else:
                 return self._generate_fallback_question(chunk, quiz_type)
             

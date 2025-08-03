@@ -8,6 +8,14 @@ import logging
 import click
 from pathlib import Path
 
+# Load environment variables from .env file
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    # dotenv not available, continue without it
+    pass
+
 from .pipeline import ObsidianStudyPipeline
 from .utils import ConfigManager
 
@@ -44,7 +52,7 @@ def cli(ctx, config, verbose):
               type=click.Choice(['ollama', 'openai', 'openrouter', 'gemini']),
               help='Type of model to use')
 @click.option('--api-key', default=None,
-              help='API key for online models (openrouter, gemini)')
+              help='API key for online models (optional - will check environment variables)')
 @click.option('--formats', '-f', multiple=True, 
               default=['markdown', 'quizlet_csv'], 
               help='Export formats (can be used multiple times)')
@@ -58,6 +66,22 @@ def run(ctx, vault_path, output, questions, model, model_type, api_key, formats)
         click.echo(f"❓ Max questions: {questions}")
         click.echo(f"🤖 Model: {model_type}:{model}")
         click.echo(f"📤 Export formats: {', '.join(formats)}")
+        
+        # Show environment variable status for online models
+        if model_type in ['openrouter', 'gemini', 'openai']:
+            env_vars = {
+                'openrouter': 'OPENROUTER_API_KEY',
+                'gemini': 'GOOGLE_API_KEY',
+                'openai': 'OPENAI_API_KEY'
+            }
+            env_var = env_vars.get(model_type)
+            if env_var and os.getenv(env_var):
+                click.echo(f"🔑 API key loaded from environment variable: {env_var}")
+            elif api_key:
+                click.echo(f"🔑 API key provided via command line")
+            else:
+                click.echo(f"⚠️ No API key found. Set {env_var} in .env file or use --api-key")
+        
         click.echo()
         
         # Initialize pipeline

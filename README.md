@@ -16,7 +16,8 @@ The pipeline prioritizes free, open-source models and SOTA (state-of-the-art) re
 - **Multiple Export Options**: Output to Quizlet (CSV), Anki (CSV), Markdown files, JSON, and study guides
 - **Support for Math & Images**: Handle Obsidian's math grammar and image links
 - **Retrieval-Augmented Generation**: Use RAG or similar methods for contextual and accurate question generation
-- **Free/Open Source AI Models**: Prioritize models like Llama, Mistral, OpenAI GPT-4-free equivalents, HuggingFace models, etc.
+- **Free Online AI Models**: Use free models from Openrouter and Google Gemini (no local setup required)
+- **Local AI Models**: Support for Ollama, Hugging Face, and other local models for privacy
 - **Customizable Quiz Types**: Flashcards, multiple choice, cloze deletion, short answer, true/false
 - **Semantic Search**: Find relevant content using advanced similarity search
 - **Modular Design**: Each component can be used independently
@@ -65,6 +66,24 @@ python run_pipeline.py examples/sample_vault
 python run_pipeline.py examples/sample_vault --topic "machine learning" --questions 15
 ```
 
+**Use free online models (no local setup required):**
+
+*With Openrouter (multiple free models):*
+```bash
+python run_pipeline.py examples/sample_vault \
+  --model-type openrouter \
+  --model "microsoft/phi-3-mini-128k-instruct:free" \
+  --api-key "your-openrouter-api-key"
+```
+
+*With Google Gemini (free tier):*
+```bash
+python run_pipeline.py examples/sample_vault \
+  --model-type gemini \
+  --model "gemini-1.5-flash" \
+  --api-key "your-google-api-key"
+```
+
 **Customize output and model:**
 ```bash
 python run_pipeline.py examples/sample_vault \
@@ -88,7 +107,8 @@ Options:
   --output, -o DIR           Output directory (default: output)
   --questions, -q INT        Max questions to generate (default: 50)
   --model, -m TEXT           Model name (default: llama3.2:1b)
-  --model-type TEXT          Model type: ollama, openai, huggingface
+  --model-type TEXT          Model type: ollama, openai, openrouter, gemini
+  --api-key TEXT             API key for online models (openrouter, gemini)
   --topic TEXT               Focus on specific topic
   --quiz-types LIST          Question types: flashcard, multiple_choice, etc.
   --formats, -f LIST         Export formats: markdown, quizlet_csv, anki_csv, json
@@ -221,12 +241,72 @@ generation:
   api_key: "your-api-key"
 ```
 
+### Free Online Models
+
+#### Openrouter (Access to Multiple Free Models)
+[Openrouter](https://openrouter.ai/) provides free access to various open-source models:
+
+```yaml
+generation:
+  model_type: "openrouter"
+  model_name: "microsoft/phi-3-mini-128k-instruct:free"  # Free model
+  api_key: "your-openrouter-api-key"
+```
+
+**Command line usage:**
+```bash
+python run_pipeline.py examples/sample_vault \
+  --model-type openrouter \
+  --model "microsoft/phi-3-mini-128k-instruct:free" \
+  --api-key "your-openrouter-api-key"
+```
+
+**Popular free models on Openrouter:**
+- `microsoft/phi-3-mini-128k-instruct:free` - Microsoft Phi-3 Mini
+- `meta-llama/llama-3.2-3b-instruct:free` - Llama 3.2 3B
+- `meta-llama/llama-3.2-1b-instruct:free` - Llama 3.2 1B
+- `mistralai/mistral-7b-instruct:free` - Mistral 7B
+
+#### Google Gemini AI Studio (Free Tier)
+[Google AI Studio](https://aistudio.google.com/) provides free access to Gemini models:
+
+```yaml
+generation:
+  model_type: "gemini"
+  model_name: "gemini-1.5-flash"  # Free tier model
+  api_key: "your-google-api-key"
+```
+
+**Command line usage:**
+```bash
+python run_pipeline.py examples/sample_vault \
+  --model-type gemini \
+  --model "gemini-1.5-flash" \
+  --api-key "your-google-api-key"
+```
+
+**Available Gemini models:**
+- `gemini-1.5-flash` - Fast, efficient model (free tier)
+- `gemini-1.5-pro` - More capable model (free tier with limits)
+- `gemini-pro` - Previous generation model
+
 ### Local Models via Ollama
 Available models:
 - `llama3.2:1b` - Fast, lightweight
 - `llama3.2:3b` - Better quality
 - `mistral:7b` - Good balance
 - `codellama:7b` - Better for technical content
+
+### Model Comparison
+
+| Model Type | Setup Required | Cost | Speed | Quality | Best For |
+|------------|----------------|------|-------|---------|----------|
+| **Openrouter Free** | API key only | Free (with limits) | Fast | Good | Quick prototyping, testing |
+| **Gemini Free** | API key only | Free (with limits) | Very Fast | Very Good | Production-ready questions |
+| **Ollama Local** | Local installation | Free | Medium | Good-Excellent | Privacy, offline use |
+| **OpenAI Paid** | API key + billing | Paid | Fast | Excellent | Premium quality |
+
+**Recommendation for new users:** Start with **Gemini** or **Openrouter** for immediate results without local setup.
 
 ## 📝 Quiz Types
 
@@ -237,6 +317,45 @@ Available models:
 5. **True/False**: Boolean questions with explanations
 
 ## 🎯 Advanced Usage
+
+### Free Online Model Examples
+
+**Quick start with Openrouter (no local setup):**
+```bash
+# Get your free API key from https://openrouter.ai/
+export OPENROUTER_API_KEY="your-openrouter-api-key"
+
+# Use a fast, free model
+python run_pipeline.py examples/sample_vault \
+  --model-type openrouter \
+  --model "microsoft/phi-3-mini-128k-instruct:free" \
+  --api-key $OPENROUTER_API_KEY \
+  --questions 20
+```
+
+**Using Google Gemini (free tier):**
+```bash
+# Get your free API key from https://aistudio.google.com/
+export GOOGLE_API_KEY="your-google-api-key"
+
+# Use Gemini Flash for fast generation
+python run_pipeline.py examples/sample_vault \
+  --model-type gemini \
+  --model "gemini-1.5-flash" \
+  --api-key $GOOGLE_API_KEY \
+  --questions 30
+```
+
+**Configuration file for free online models:**
+```yaml
+# config.yaml for Openrouter
+generation:
+  model_type: "openrouter"
+  model_name: "meta-llama/llama-3.2-3b-instruct:free"
+  api_key: "your-openrouter-api-key"
+  questions_per_chunk: 3
+  max_questions: 100
+```
 
 ### Topic-Focused Generation
 ```bash

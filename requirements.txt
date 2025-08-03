@@ -18,6 +18,10 @@ faiss-cpu>=1.7.0
 # Optional: For local LLM inference
 ollama>=0.1.0
 
+# Optional: For online LLM APIs
+openai>=1.0.0
+google-generativeai>=0.3.0
+
 # Development and testing
 pytest>=7.0.0
 pytest-cov>=4.0.0

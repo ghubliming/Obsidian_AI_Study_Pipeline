@@ -273,10 +273,10 @@ retrieval:
 
 # Quiz generation settings
 generation:
-  model_type: "ollama"  # Type of model (ollama, openai, huggingface)
+  model_type: "ollama"  # Type of model (ollama, openai, openrouter, gemini, huggingface)
   model_name: "llama3.2:1b"  # Specific model name
-  api_key: null  # API key if needed
-  base_url: null  # Base URL if using custom API
+  api_key: null  # API key if needed (required for openrouter and gemini)
+  base_url: null  # Base URL if using custom API (auto-set for openrouter)
   questions_per_chunk: 2  # Questions to generate per content chunk
   max_questions: 50  # Maximum total questions
   quiz_types:  # Types of questions to generate

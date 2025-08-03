@@ -50,7 +50,7 @@ class QuizGenerator:
         Initialize quiz generator.
         
         Args:
-            model_type: Type of model to use ('ollama', 'openai', 'huggingface')
+            model_type: Type of model to use ('ollama', 'openai', 'openrouter', 'gemini', 'huggingface')
             model_name: Name of the specific model
             api_key: API key if required
             base_url: Base URL for API if required
@@ -81,6 +81,28 @@ class QuizGenerator:
                 return client
             except ImportError:
                 logger.error("OpenAI not installed. Install with: pip install openai")
+                return None
+        elif self.model_type == "openrouter":
+            try:
+                import openai
+                # Openrouter uses OpenAI-compatible API
+                base_url = self.base_url or "https://openrouter.ai/api/v1"
+                client = openai.OpenAI(
+                    api_key=self.api_key,
+                    base_url=base_url
+                )
+                return client
+            except ImportError:
+                logger.error("OpenAI client not installed. Install with: pip install openai")
+                return None
+        elif self.model_type == "gemini":
+            try:
+                import google.generativeai as genai
+                if self.api_key:
+                    genai.configure(api_key=self.api_key)
+                return genai
+            except ImportError:
+                logger.error("Google Generative AI not installed. Install with: pip install google-generativeai")
                 return None
         else:
             logger.warning(f"Unsupported model type: {self.model_type}")
@@ -163,13 +185,17 @@ class QuizGenerator:
                     {"role": "user", "content": prompt}
                 ])
                 response_text = response['message']['content']
-            elif self.model_type == "openai":
+            elif self.model_type in ["openai", "openrouter"]:
                 response = self.client.chat.completions.create(
                     model=self.model_name,
                     messages=[{"role": "user", "content": prompt}],
                     temperature=0.7
                 )
                 response_text = response.choices[0].message.content
+            elif self.model_type == "gemini":
+                model = self.client.GenerativeModel(self.model_name)
+                response = model.generate_content(prompt)
+                response_text = response.text
             else:
                 return self._generate_fallback_question(chunk, quiz_type)
             

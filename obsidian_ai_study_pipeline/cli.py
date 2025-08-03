@@ -40,18 +40,23 @@ def cli(ctx, config, verbose):
               help='Maximum number of questions to generate')
 @click.option('--model', '-m', default='llama3.2:1b', 
               help='Model name for question generation')
+@click.option('--model-type', default='ollama',
+              type=click.Choice(['ollama', 'openai', 'openrouter', 'gemini']),
+              help='Type of model to use')
+@click.option('--api-key', default=None,
+              help='API key for online models (openrouter, gemini)')
 @click.option('--formats', '-f', multiple=True, 
               default=['markdown', 'quizlet_csv'], 
               help='Export formats (can be used multiple times)')
 @click.pass_context
-def run(ctx, vault_path, output, questions, model, formats):
+def run(ctx, vault_path, output, questions, model, model_type, api_key, formats):
     """Run the complete pipeline on an Obsidian vault."""
     try:
         click.echo(f"🚀 Starting Obsidian AI Study Pipeline")
         click.echo(f"📂 Vault path: {vault_path}")
         click.echo(f"📁 Output directory: {output}")
         click.echo(f"❓ Max questions: {questions}")
-        click.echo(f"🤖 Model: {model}")
+        click.echo(f"🤖 Model: {model_type}:{model}")
         click.echo(f"📤 Export formats: {', '.join(formats)}")
         click.echo()
         
@@ -63,6 +68,9 @@ def run(ctx, vault_path, output, questions, model, formats):
         pipeline.config.output.output_dir = output
         pipeline.config.generation.max_questions = questions
         pipeline.config.generation.model_name = model
+        pipeline.config.generation.model_type = model_type
+        if api_key:
+            pipeline.config.generation.api_key = api_key
         pipeline.config.output.export_formats = list(formats)
         
         # Run pipeline

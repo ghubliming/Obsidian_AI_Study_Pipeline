@@ -7,8 +7,8 @@ python-dotenv>=1.0.0
 
 # Markdown and text processing
 markdown>=3.4.0
-frontmatter>=3.0.0
-beautifulsoup4>=4.11.0
+#frontmatter>=3.0.0
+python-frontmatter>=1.0.0beautifulsoup4>=4.11.0
 
 # Machine Learning and NLP
 torch>=1.11.0

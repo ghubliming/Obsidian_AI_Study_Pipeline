@@ -134,8 +134,8 @@ class ContentPreprocessor:
         content = re.sub(r'#{4,}', '###', content)  # Limit heading levels
         
         # Normalize quotes
-        content = re.sub(r'["""]', '"', content)
-        content = re.sub(r'['']', "'", content)
+        content = content.replace('"', '"').replace('"', '"')
+        content = content.replace(''', "'").replace(''', "'")
         
         # Remove excessive punctuation
         content = re.sub(r'\.{3,}', '...', content)
@@ -187,7 +187,7 @@ class ContentPreprocessor:
             elif '$' in section_content or '\\(' in section_content:
                 processed_sections.append(('math', section_content))
             # Check for lists
-            elif re.search(r'^[-*+]\s', section_content, re.MULTILINE) or re.search(r'^\d+\.\s', section_content, re.MULTILINE):
+            elif re.search(r'^[*+-]\s', section_content, re.MULTILINE) or re.search(r'^\d+\.\s', section_content, re.MULTILINE):
                 processed_sections.append(('list', section_content))
             else:
                 processed_sections.append((section_type, section_content))

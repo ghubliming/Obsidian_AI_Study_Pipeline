@@ -6,6 +6,7 @@ And Gemini 2.0 flash is encountering rate issues.
 - At least it has some output, but not full lists.
 - ` python run_pipeline.py examples/sample_vault --model-type gemini --model "gemini-2.0-flash" `
 - default is already quizlet `--formats quizlet_csv`
+- Find a way to limit the rate locally!!!
 
 Same with Openrouter too slow and rate limited. Almost not usable!
 - tried 0324 DeepSeek

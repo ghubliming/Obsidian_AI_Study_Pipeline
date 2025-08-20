@@ -135,3 +135,6 @@ output/
 *.yml
 !config.yaml
 !requirements.txt
+
+# IDEA
+.idea/

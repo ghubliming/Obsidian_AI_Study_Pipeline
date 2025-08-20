@@ -153,7 +153,7 @@ python run_pipeline.py examples/sample_vault \
   --rate-limit 0.2
 ```
 
-**See [RATE_LIMITING.md](RATE_LIMITING.md) for detailed documentation.**
+**See [RATE_LIMITING.md](docs/RATE_LIMITING.md) for detailed documentation.**
 
 ### Configuration File
 
@@ -503,6 +503,36 @@ ollama pull llama3.2:1b
 - Use `--force-rebuild` only when necessary
 - Cache is stored in `.cache/` directory
 - Consider using GPU-enabled models for large vaults
+
+## 📁 Project Structure
+
+```
+Obsidian_AI_Study_Pipeline/
+├── obsidian_ai_study_pipeline/          # Main package
+│   ├── generation/                      # Quiz generation module
+│   ├── preprocessing/                   # Content preprocessing
+│   ├── retrieval/                       # Semantic search and retrieval
+│   ├── output_formatting/               # Export functionality
+│   ├── vault_parser/                    # Obsidian vault parsing
+│   └── utils/                          # Configuration and utilities
+├── docs/                               # Documentation
+│   ├── RATE_LIMITING.md               # Rate limiting guide
+│   ├── RATE_LIMITING_IMPLEMENTATION_SUMMARY.md  # Implementation details
+│   ├── Develop_logs.md                # Development logs
+│   └── README.md                      # Documentation index
+├── scripts/                           # Demo and test scripts
+│   ├── demo.py                        # Basic demo
+│   ├── demo_free_models.py            # Free models showcase
+│   ├── demo_rate_limiting.py          # Rate limiting demo
+│   └── test_rate_limiting.py          # Rate limiting tests
+├── config/                            # Configuration templates
+│   └── .env.example                   # Environment variables template
+├── examples/                          # Sample vaults and usage
+├── tests/                             # Test suite
+├── run_pipeline.py                    # Main CLI script
+├── setup.py                           # Package installation
+└── requirements.txt                   # Dependencies
+```
 
 ## 🤝 Contributing
 

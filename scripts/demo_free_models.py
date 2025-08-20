@@ -57,8 +57,8 @@ def demo_new_models():
     print()
     print("1. Using .env file (Recommended):")
     print("```bash")
-    print("# Copy .env.example to .env")
-    print("cp .env.example .env")
+    print("# Copy config/.env.example to .env")
+    print("cp config/.env.example .env")
     print()
     print("# Edit .env file:")
     print("OPENROUTER_API_KEY=your_actual_openrouter_key")
@@ -81,7 +81,7 @@ def demo_new_models():
     print("🔧 Getting Started (3 Easy Steps):")
     print()
     print("1. Copy the example environment file:")
-    print("   cp .env.example .env")
+    print("    print("   cp config/.env.example .env")")
     print()
     print("2. Edit .env and add your API keys:")
     print("   OPENROUTER_API_KEY=your_key_here")
@@ -101,7 +101,7 @@ def demo_new_models():
     
     print("🎯 Quick Start Recommendation:")
     print("1. Sign up for Google AI Studio (fastest setup)")
-    print("2. Copy .env.example to .env and add your Google API key")
+    print("2. Copy config/.env.example to .env and add your Google API key")
     print("3. Run: python run_pipeline.py examples/sample_vault --model-type gemini --model gemini-1.5-flash")
     print()
     

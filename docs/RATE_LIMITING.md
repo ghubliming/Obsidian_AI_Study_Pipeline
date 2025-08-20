@@ -174,7 +174,7 @@ Watch the timestamps during question generation to see rate limiting in action.
 ### Testing Rate Limiting
 Run the test script to verify functionality:
 ```bash
-python test_rate_limiting.py
+python scripts/test_rate_limiting.py
 ```
 
 ## Environment Variables

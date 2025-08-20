@@ -208,7 +208,9 @@ class ObsidianStudyPipeline:
             model_type=self.config.generation.model_type,
             model_name=self.config.generation.model_name,
             api_key=self.config.generation.api_key,
-            base_url=self.config.generation.base_url
+            base_url=self.config.generation.base_url,
+            rate_limit=getattr(self.config.generation, 'rate_limit', None),
+            rate_limit_delay=getattr(self.config.generation, 'rate_limit_delay', None)
         )
         
         self.questions = self.generator.generate_quiz_questions(

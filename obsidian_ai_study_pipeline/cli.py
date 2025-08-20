@@ -56,8 +56,12 @@ def cli(ctx, config, verbose):
 @click.option('--formats', '-f', multiple=True, 
               default=['markdown', 'quizlet_csv'], 
               help='Export formats (can be used multiple times)')
+@click.option('--rate-limit', default=None, type=float,
+              help='Rate limit for API calls (requests per second). Useful for Google AI Studio quotas.')
+@click.option('--rate-limit-delay', default=None, type=float,
+              help='Fixed delay between API calls in seconds. Alternative to rate-limit.')
 @click.pass_context
-def run(ctx, vault_path, output, questions, model, model_type, api_key, formats):
+def run(ctx, vault_path, output, questions, model, model_type, api_key, formats, rate_limit, rate_limit_delay):
     """Run the complete pipeline on an Obsidian vault."""
     try:
         click.echo(f"🚀 Starting Obsidian AI Study Pipeline")
@@ -66,6 +70,14 @@ def run(ctx, vault_path, output, questions, model, model_type, api_key, formats)
         click.echo(f"❓ Max questions: {questions}")
         click.echo(f"🤖 Model: {model_type}:{model}")
         click.echo(f"📤 Export formats: {', '.join(formats)}")
+        
+        # Show rate limiting info
+        if rate_limit:
+            click.echo(f"⏱️ Rate limit: {rate_limit} requests/second")
+        elif rate_limit_delay:
+            click.echo(f"⏱️ API delay: {rate_limit_delay} seconds between calls")
+        elif model_type == 'gemini':
+            click.echo("⚠️ Consider using --rate-limit or --rate-limit-delay for Gemini API to avoid quota issues")
         
         # Show environment variable status for online models
         if model_type in ['openrouter', 'gemini', 'openai']:
@@ -95,6 +107,10 @@ def run(ctx, vault_path, output, questions, model, model_type, api_key, formats)
         pipeline.config.generation.model_type = model_type
         if api_key:
             pipeline.config.generation.api_key = api_key
+        if rate_limit:
+            pipeline.config.generation.rate_limit = rate_limit
+        if rate_limit_delay:
+            pipeline.config.generation.rate_limit_delay = rate_limit_delay
         pipeline.config.output.export_formats = list(formats)
         
         # Run pipeline

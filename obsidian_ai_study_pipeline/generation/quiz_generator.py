@@ -6,6 +6,7 @@ import json
 import os
 import re
 import logging
+import time
 from typing import List, Dict, Optional, Any, Tuple
 from dataclasses import dataclass, field
 from enum import Enum
@@ -54,7 +55,9 @@ class QuizGenerator:
                  model_type: str = "ollama",
                  model_name: str = "llama3.2:1b",
                  api_key: Optional[str] = None,
-                 base_url: Optional[str] = None):
+                 base_url: Optional[str] = None,
+                 rate_limit: Optional[float] = None,
+                 rate_limit_delay: Optional[float] = None):
         """
         Initialize quiz generator.
         
@@ -63,9 +66,26 @@ class QuizGenerator:
             model_name: Name of the specific model
             api_key: API key if required (will check environment variables if not provided)
             base_url: Base URL for API if required (will use defaults for known services)
+            rate_limit: Requests per second (e.g., 0.5 for 1 request every 2 seconds)
+            rate_limit_delay: Fixed delay between requests in seconds (alternative to rate_limit)
         """
         self.model_type = model_type
         self.model_name = model_name
+        
+        # Rate limiting configuration
+        self.rate_limit = rate_limit
+        self.rate_limit_delay = rate_limit_delay
+        self.last_request_time = 0.0
+        
+        # Calculate delay from rate limit if provided
+        if self.rate_limit and self.rate_limit > 0:
+            self.calculated_delay = 1.0 / self.rate_limit
+            logger.info(f"Rate limiting enabled: {self.rate_limit} requests/second (delay: {self.calculated_delay:.2f}s)")
+        elif self.rate_limit_delay and self.rate_limit_delay > 0:
+            self.calculated_delay = self.rate_limit_delay
+            logger.info(f"Fixed delay enabled: {self.rate_limit_delay}s between requests")
+        else:
+            self.calculated_delay = 0.0
         
         # Get API key from environment variables if not provided
         self.api_key = self._get_api_key(model_type, api_key)
@@ -81,6 +101,10 @@ class QuizGenerator:
             logger.info("API key loaded successfully")
         elif model_type in ["openrouter", "gemini", "openai"]:
             logger.warning(f"No API key found for {model_type}. Set environment variable or pass api_key parameter.")
+        
+        # Special warning for Gemini without rate limiting
+        if model_type == "gemini" and self.calculated_delay == 0.0:
+            logger.warning("Gemini API detected without rate limiting. Consider setting --rate-limit or --rate-limit-delay to avoid quota issues.")
     
     def _get_api_key(self, model_type: str, provided_key: Optional[str]) -> Optional[str]:
         """Get API key from provided parameter or environment variables."""
@@ -172,6 +196,19 @@ class QuizGenerator:
             logger.warning(f"Unsupported model type: {self.model_type}")
             return None
     
+    def _apply_rate_limit(self):
+        """Apply rate limiting delay if configured."""
+        if self.calculated_delay > 0:
+            current_time = time.time()
+            time_since_last_request = current_time - self.last_request_time
+            
+            if time_since_last_request < self.calculated_delay:
+                sleep_time = self.calculated_delay - time_since_last_request
+                logger.debug(f"Rate limiting: sleeping for {sleep_time:.2f} seconds")
+                time.sleep(sleep_time)
+            
+            self.last_request_time = time.time()
+    
     def generate_quiz_questions(self,
                               chunks: List[ContentChunk],
                               quiz_types: List[QuizType] = None,
@@ -241,6 +278,9 @@ class QuizGenerator:
         if self.client is None:
             return self._generate_fallback_question(chunk, quiz_type)
         
+        # Apply rate limiting before making API call
+        self._apply_rate_limit()
+        
         prompt = self._create_prompt(chunk, quiz_type)
         
         try:
@@ -267,6 +307,9 @@ class QuizGenerator:
             
         except Exception as e:
             logger.error(f"Error calling {self.model_type} API: {e}")
+            # Check if it's a rate limit error and suggest solutions
+            if "quota" in str(e).lower() or "rate" in str(e).lower() or "limit" in str(e).lower():
+                logger.warning("Possible rate limit error detected. Consider using --rate-limit or --rate-limit-delay options.")
             return self._generate_fallback_question(chunk, quiz_type)
     
     def _create_prompt(self, chunk: ContentChunk, quiz_type: QuizType) -> str:

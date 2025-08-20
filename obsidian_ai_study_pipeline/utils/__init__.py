@@ -2,6 +2,6 @@
 Utility modules.
 """
 
-from .config import ConfigManager, PipelineConfig
+from .config import ConfigManager, PipelineConfig, GenerationConfig
 
-__all__ = ["ConfigManager", "PipelineConfig"]
+__all__ = ["ConfigManager", "PipelineConfig", "GenerationConfig"]

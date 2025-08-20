@@ -1,0 +1,32 @@
+Term,Definition
+What type of data does supervised learning utilize to train a model?,Labeled data
+What type of machine learning uses labeled data for training?,Supervised Learning
+What is the key difference between supervised and unsupervised learning?,"Supervised learning uses labeled data (inputs with correct outputs), while unsupervised learning uses unlabeled data (only inputs)."
+What type of data does unsupervised learning use?,Unlabeled data
+What is a core component of reinforcement learning where the decision maker learns through interaction?,Agent
+"What is a core mathematical model used in machine learning, and how is it represented?",Linear regression:  y = β₀ + β₁x₁ + β₂x₂ + ...
+"In the context of linear regression, what does the term 'MSE' stand for, and what is its purpose?",MSE stands for Mean Squared Error. It is a cost function used to evaluate how well a linear regression model fits the data by measuring the average squared difference between the predicted values and the actual values.
+What is the cost function (Mean Squared Error) used in linear regression?,J(θ) = (1 / 2m) * Σ[ (hθ(x(i)) - y(i))2 ]
+What are the definitions of precision and recall?,Precision is True positives / (True positives + False positives). Recall is True positives / (True positives + False negatives).
+What is the most common method used to assess how well a model will generalize to an independent dataset?,k-fold cross-validation
+What are two techniques that can be used to address the problem of overfitting in machine learning?,"Regularization (L1, L2) and Cross-validation."
+What is overfitting and what are some common solutions?,"Overfitting is when a model performs well on training data but poorly on new data, often memorizing noise. Solutions include: Regularization (L1, L2), Feature Selection, Cross-validation, Early Stopping, and more/better training data."
+What is the basic unit of a neural network?,A neuron (or node)
+What is the mathematical representation of a neuron?,y = f(∑_(i=1)^n w_i x_i + b)
+What is the mathematical representation of a single neuron in a neural network?,y = f(∑(from i=1 to n) w_i x_i + b)
+Which activation function is commonly used in multi-class classification and outputs probabilities?,Softmax
+Which activation function is commonly used in multi-class classification and outputs probabilities?,Softmax
+What are the three main steps in the backpropagation process?,1. Calculate loss function 2. Compute gradients using chain rule 3. Update weights using gradient descent
+What type of data are Convolutional Neural Networks (CNNs) primarily designed to process?,"Grid-like data, such as images."
+What is the formula for Mean Squared Error (MSE) in regression?,MSE = (1/n) * Σ(y_i - ŷ_i)^2
+What are three main types of neural network architectures discussed in the context of deep learning?,"Fully Connected Layers, Recurrent Neural Networks (RNNs), and Transformers"
+"What is the purpose of weight decay (L2 Regularization) in the context of neural networks, and how is it implemented in the loss function?","Weight decay helps prevent overfitting by adding a penalty term to the loss function. This penalty term is proportional to the sum of the squared weights, represented as \(\lambda \sum w_i^2\) where \(\lambda\) is a hyperparameter controlling the strength of the penalty and \(w_i\) represents the weights of the network."
+What is the primary purpose of dropout in neural networks?,To prevent overfitting.
+What are two key challenges when working with Deep Learning?,Computational Requirements and Data Requirements.
+"According to the provided text, what are two challenges associated with using complex machine learning models?",Interpretability (difficulty understanding decisions) and Overfitting (memorizing training data).
+What is NumPy used for in Python for data science?,"NumPy provides support for large, multi-dimensional arrays and matrices, along with mathematical functions."
+"What are two essential Python libraries for data manipulation and analysis, and data visualization?",NumPy and Pandas (for manipulation) and Matplotlib/Seaborn (for visualization)
+Which two Python libraries are mentioned for data visualization in the provided content?,Matplotlib and Seaborn
+What is the purpose of `train_test_split` and what does `test_size=0.2` mean?,To split the dataset into training and testing sets; `test_size=0.2` allocates 20% of the data for testing.
+"What are the key steps in a typical data science workflow, according to the document?","1. Data Cleaning (handling missing values, outliers, inconsistencies) 2. Exploratory Data Analysis (EDA) 3. Feature Engineering 4. Model Selection 5. Model Training 6. Model Evaluation 7. Deployment"
+"What are three key aspects to consider for data handling in a data science project, according to the given guidelines?","Validate your data, handle missing values appropriately, and be aware of data types/memory usage."

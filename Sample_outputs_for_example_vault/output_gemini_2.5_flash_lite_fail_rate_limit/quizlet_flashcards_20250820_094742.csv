@@ -1,0 +1,15 @@
+Term,Definition
+What is the primary characteristic of data used in supervised learning?,Labeled data
+"In supervised learning, what is provided during the training of a model?","Labeled data, meaning both the input and the correct output are provided."
+What is the primary difference between supervised and unsupervised learning?,"Supervised learning uses labeled data (inputs with corresponding correct outputs), while unsupervised learning uses unlabeled data (only inputs)."
+What is the primary difference between supervised and unsupervised learning in machine learning?,"Supervised learning uses labeled data (inputs with correct outputs), while unsupervised learning uses unlabeled data (only inputs)."
+What are the three main types of unsupervised learning algorithms?,"Clustering, Association Rules, and Dimensionality Reduction."
+What is the fundamental goal of an agent in reinforcement learning?,To learn to maximize cumulative reward over time by interacting with an environment and receiving feedback (rewards or penalties) for its actions.
+"What are the key components involved in learning to make decisions by interacting with an environment, where an agent receives rewards or penalties?","Agent, Environment, Actions, and Rewards."
+"In the context of linear regression, what does the term $\epsilon$ represent in the equation $y = \beta_0 + \beta_1 x_1 + ... + \beta_n x_n + \epsilon$?",The error term
+"What is the mathematical formula for the Mean Squared Error (MSE) cost function used in linear regression, where $m$ is the number of training examples, $h_	heta(x^{(i)})$ is the predicted value for the $i$-th example, and $y^{(i)}$ is the actual value?",$$J(\theta) = \frac{1}{2m} \sum_{i=1}^{m} (h_\theta(x^{(i)}) - y^{(i)})^2$$
+What is the primary purpose of k-fold cross-validation in machine learning?,To assess how well a model will generalize to an independent dataset.
+What is the primary purpose of k-fold cross-validation in machine learning?,To assess how well a model will generalize to an independent dataset.
+"What is the term for a machine learning model that performs poorly on new data because it has learned the training data too well, including noise and outliers?",Overfitting
+"What ML problem occurs when a model performs poorly on new data because it has learned the training data too well, including noise and outliers?",Overfitting
+"What is the fundamental building block of a neural network that receives inputs, transforms them, and produces an output?",A neuron (or node)

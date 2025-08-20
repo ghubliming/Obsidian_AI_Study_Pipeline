@@ -42,6 +42,8 @@ class GenerationConfig:
     questions_per_chunk: int = 2
     max_questions: int = 50
     quiz_types: list = field(default_factory=lambda: ["flashcard", "multiple_choice", "short_answer"])
+    rate_limit: Optional[float] = None  # Requests per second
+    rate_limit_delay: Optional[float] = None  # Fixed delay between requests in seconds
 
 @dataclass
 class OutputConfig:
@@ -169,7 +171,9 @@ class ConfigManager:
                 base_url=gen_data.get('base_url', config.generation.base_url),
                 questions_per_chunk=gen_data.get('questions_per_chunk', config.generation.questions_per_chunk),
                 max_questions=gen_data.get('max_questions', config.generation.max_questions),
-                quiz_types=gen_data.get('quiz_types', config.generation.quiz_types)
+                quiz_types=gen_data.get('quiz_types', config.generation.quiz_types),
+                rate_limit=gen_data.get('rate_limit', config.generation.rate_limit),
+                rate_limit_delay=gen_data.get('rate_limit_delay', config.generation.rate_limit_delay)
             )
         
         # Update output config
@@ -213,7 +217,9 @@ class ConfigManager:
                 'base_url': config.generation.base_url,
                 'questions_per_chunk': config.generation.questions_per_chunk,
                 'max_questions': config.generation.max_questions,
-                'quiz_types': config.generation.quiz_types
+                'quiz_types': config.generation.quiz_types,
+                'rate_limit': config.generation.rate_limit,
+                'rate_limit_delay': config.generation.rate_limit_delay
             },
             'output': {
                 'output_dir': config.output.output_dir,
@@ -279,6 +285,8 @@ generation:
   base_url: null  # Base URL if using custom API (auto-set for openrouter)
   questions_per_chunk: 2  # Questions to generate per content chunk
   max_questions: 50  # Maximum total questions
+  rate_limit: null  # Requests per second (e.g., 0.5 for 1 request every 2 seconds)
+  rate_limit_delay: null  # Fixed delay between requests in seconds (alternative to rate_limit)
   quiz_types:  # Types of questions to generate
     - "flashcard"
     - "multiple_choice"

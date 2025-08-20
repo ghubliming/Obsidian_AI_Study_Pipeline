@@ -48,6 +48,11 @@ Examples:
   
 Free Online Models (with .env file):
   python run_pipeline.py vault_path --model-type openrouter --model "microsoft/phi-3-mini-128k-instruct:free"
+  python run_pipeline.py vault_path --model-type gemini --model "gemini-2.0-flash-exp"
+
+Rate Limiting (for Google AI Studio quotas):
+  python run_pipeline.py vault_path --model-type gemini --model "gemini-2.0-flash-exp" --rate-limit 0.5
+  python run_pipeline.py vault_path --model-type gemini --rate-limit-delay 2.0
   python run_pipeline.py vault_path --model-type gemini --model "gemini-1.5-flash"
         """
     )
@@ -78,6 +83,13 @@ Free Online Models (with .env file):
     # API configuration (will check environment variables)
     parser.add_argument('--api-key',
                        help='API key for online models (optional - will check environment variables: OPENROUTER_API_KEY, GOOGLE_API_KEY, OPENAI_API_KEY)')
+    
+    # Rate limiting options
+    parser.add_argument('--rate-limit', type=float,
+                       help='Rate limit for API calls (requests per second). Useful for Google AI Studio quotas.')
+    
+    parser.add_argument('--rate-limit-delay', type=float,
+                       help='Fixed delay between API calls in seconds. Alternative to rate-limit.')
     
     # Filtering options
     parser.add_argument('--topic',
@@ -150,6 +162,10 @@ Free Online Models (with .env file):
         pipeline.config.generation.model_type = args.model_type
         if args.api_key:
             pipeline.config.generation.api_key = args.api_key
+        if args.rate_limit:
+            pipeline.config.generation.rate_limit = args.rate_limit
+        if args.rate_limit_delay:
+            pipeline.config.generation.rate_limit_delay = args.rate_limit_delay
         pipeline.config.generation.quiz_types = args.quiz_types
         pipeline.config.output.export_formats = args.formats
         pipeline.config.preprocessing.chunk_size = args.chunk_size

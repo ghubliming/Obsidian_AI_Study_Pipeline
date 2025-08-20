@@ -84,6 +84,15 @@ python run_pipeline.py examples/sample_vault \
   --api-key "your-google-api-key"
 ```
 
+*With Google Gemini and rate limiting (recommended to avoid quota issues):*
+```bash
+python run_pipeline.py examples/sample_vault \
+  --model-type gemini \
+  --model "gemini-2.0-flash-exp" \
+  --rate-limit 0.5 \
+  --api-key "your-google-api-key"
+```
+
 **Customize output and model:**
 ```bash
 python run_pipeline.py examples/sample_vault \
@@ -109,6 +118,8 @@ Options:
   --model, -m TEXT           Model name (default: llama3.2:1b)
   --model-type TEXT          Model type: ollama, openai, openrouter, gemini
   --api-key TEXT             API key for online models (openrouter, gemini)
+  --rate-limit FLOAT         Rate limit for API calls (requests per second)
+  --rate-limit-delay FLOAT   Fixed delay between API calls in seconds
   --topic TEXT               Focus on specific topic
   --quiz-types LIST          Question types: flashcard, multiple_choice, etc.
   --formats, -f LIST         Export formats: markdown, quizlet_csv, anki_csv, json
@@ -118,6 +129,31 @@ Options:
   --force-rebuild            Force rebuild semantic index
   --stats-only               Only show vault statistics
 ```
+
+### 🕒 Rate Limiting for Google AI Studio
+
+To avoid quota issues with Google AI Studio, use the built-in rate limiting features:
+
+```bash
+# Limit to 0.5 requests per second (recommended for free tier)
+python run_pipeline.py examples/sample_vault \
+  --model-type gemini \
+  --model "gemini-2.0-flash-exp" \
+  --rate-limit 0.5
+
+# Or use fixed delay between requests (2 seconds)
+python run_pipeline.py examples/sample_vault \
+  --model-type gemini \
+  --model "gemini-2.0-flash-exp" \
+  --rate-limit-delay 2.0
+
+# Very conservative for strict quotas
+python run_pipeline.py examples/sample_vault \
+  --model-type gemini \
+  --rate-limit 0.2
+```
+
+**See [RATE_LIMITING.md](RATE_LIMITING.md) for detailed documentation.**
 
 ### Configuration File
 
@@ -137,9 +173,11 @@ vault:
 
 # AI model settings
 generation:
-  model_type: "ollama"  # or "openai", "huggingface"
+  model_type: "ollama"  # or "openai", "openrouter", "gemini"
   model_name: "llama3.2:3b"
-  api_key: null  # for OpenAI
+  api_key: null  # for online models
+  rate_limit: null  # requests per second (e.g., 0.5 for gemini)
+  rate_limit_delay: null  # fixed delay between requests in seconds
   questions_per_chunk: 2
   max_questions: 100
   quiz_types: ["flashcard", "multiple_choice", "short_answer"]

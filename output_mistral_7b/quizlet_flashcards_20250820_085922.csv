@@ -1,0 +1,35 @@
+Term,Definition
+"What type of machine learning involves training a model on labeled data, where both the input and the correct output are provided?",Supervised Learning
+What is Supervised Learning in the context of Machine Learning?,"Supervised learning involves training a model on labeled data, where both the input and the correct output are provided."
+"What are two main categories of machine learning, and provide examples for each?","Supervised Learning: Linear Regression, Logistic Regression, Decision Trees, Random Forest, Support Vector Machines (SVM), Neural Networks. Unsupervised Learning: Works with unlabeled data, no corresponding correct outputs."
+What are the main types of unsupervised learning and what do they involve?,"1. Clustering: Grouping similar data points together
+2. Association Rules: Finding relationships between different variables
+3. Dimensionality Reduction: Reducing the number of features while preserving important information"
+What is the basic linear regression model expressed as?,"$y = eta_0 + eta_1 x_1 + eta_2 x_2 + ...$, where $y$ represents the dependent variable, $\beta$s are coefficients to be learned, and $x$s are independent variables."
+What is the basic linear regression model and how can it be expressed mathematically?,"The basic linear regression model can be expressed as: y = β0 + β1 x1 + β2 x2 + ..., where 'y' represents the dependent variable, 'x1', 'x2' are independent variables and β0, β1, β2 are coefficients."
+"What is overfitting in the context of machine learning, and what happens when a model is overfit?","Overfitting occurs when a model learns the training data too well, including noise and patterns that do not generalize to new data. This results in poor performance on independent datasets."
+Explain the concept of k-fold cross-validation in machine learning and how it helps to assess a model's ability to generalize to an independent dataset.,"K-fold cross-validation is a method used in machine learning for evaluating a model's ability to generalize by splitting the original dataset into 'k' equal sized subsets (or folds). The model is trained on 'k - 1' of these subsets and tested on the remaining subset. This process is repeated 'k' times, ensuring that each subset is used for testing exactly once. The average performance across all 'k' runs provides a robust estimation of the model's generalization ability."
+What are some possible solutions for improving the performance of a machine learning model that is underfitting due to poor data quality or simplicity?,"'Regularization (L1, L2)', 'Feature selection', 'Cross-validation', 'Early stopping', and 'More/better training data'"
+"What is underfitting in the context of machine learning, and how can it be addressed?","Underfitting refers to a situation where a model is too simple to capture the underlying pattern in the data, resulting in poor performance on new data. To address this issue, solutions include Regularization (L1, L2), Feature selection, Cross-validation, Early stopping, or acquiring More/better training data."
+What is the basic unit of a neural network and what does it do?,"A neuron (node) is the basic unit of a neural network. It receives inputs, applies a transformation, and produces an output."
+Which of the following activation functions solves the vanishing gradient problem and is most popular in deep learning?,'ReLU (Rectified Linear Unit)'
+Which activation function solves the vanishing gradient problem and is most popular in deep learning?,ReLU (Rectified Linear Unit)
+What are the steps involved in Backpropagation for a multi-class classification problem during training process?,"1. Calculate loss function (e.g., Cross-Entropy Loss), 2. Compute gradients using chain rule, 3. Update weights using gradient descent"
+What is the difference between a Vanilla RNN and LSTM in terms of handling long-term dependencies in sequential data?,'Vanilla RNN' has difficulty in handling long-term dependencies compared to 'LSTM'.
+What are the main types of Recurrent Neural Networks (RNNs) and what is unique about each?,"[Vanilla RNN, LSTM (Long Short-Term Memory), GRU (Gated Recurrent Unit)]
+- Vanilla RNN: Basic recurrent structure
+- LSTM: Handles long-term dependencies
+- GRU: Simplified version of LSTM"
+What is the purpose of Weight Decay (L2 Regularization) in a neural network?,'Weight Decay' adds a penalty term to the loss function to prevent overfitting.
+"What are some key applications in the field of Neural Networks and Deep Learning, as well as the associated challenges?","Applications include object detection, image segmentation, natural language processing (NLP) like language translation, sentiment analysis, text generation, speech recognition such as voice assistants and transcription services. However, these fields face significant computational requirements due to deep networks needing substantial computing power, require large amounts of labeled data, and are often considered 'black boxes' because of their opaque nature."
+"What are two challenges in using 'ed data' for machine learning, and why do these issues arise?","'Interpretability' and 'Overfitting' are the two main challenges. The 'black box' nature of ed data makes it hard to understand decisions due to lack of transparency. Complex models can memorize training data instead of learning patterns, leading to Overfitting."
+"What library in Python provides support for large, multi-dimensional arrays and matrices, and includes mathematical functions to operate on these arrays?",NumPy
+What libraries are essential for data visualization in Python?,Matplotlib and Seaborn
+What is the statistical summary of the DataFrame `df` (created in the Pandas section) and how would you filter it to only include rows where the age is greater than 25?,"To get the statistical summary, use `df.describe()`. To filter the DataFrame to only include rows where the age is greater than 25, use `df[df['age'] > 25]`."
+What are the three main steps in a typical data processing workflow during a linear regression analysis in Python?,"1. Data Collection
+2. Data Cleaning
+3. Model Training and Evaluation"
+What is the best practice for organizing code in Python data science projects?,Use virtual environments to manage sources.
+What are some best practices for organizing a Python data science project?,"Use virtual environments to manage dependencies, follow PEP 8 style guidelines, write clear, documented code, use version control (Git)."
+What are some best practices for managing dependencies in Python for Data Science?,Use virtual environments to manage dependencies
+What are four common pitfalls in Machine Learning and Data Science?,"[1] Data Leakage, [2] Overfitting, [3] Selection Bias, [4] Confirmation Bias"

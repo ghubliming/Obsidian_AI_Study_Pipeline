@@ -14,4 +14,5 @@ Same with Openrouter too slow and rate limited. Almost not usable!
 Try Ollama local on OLLAMA
 - Use Ollama Deepseek r1 7b.
 - ` python run_pipeline.py examples/sample_vault --model-type ollama --model deepseek-r1:7b --formats quizlet_csv`
--  Has bug with reasoning model like deepseek r1. Try another one!!!
+-  Has bug with reasoning model like deepseek r1. 
+- Tried Mistral 7b, it works. Take a lot of time.
